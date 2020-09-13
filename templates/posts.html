@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block head %}
+  <title>Posts</title>
+{% endblock %}
+
+<body class="posts-page">
+{% block body %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/view-post.css') }}">
+  <div class="row header-row">
+    <div class="col-lg-6">
+      <h1 class="posts-heading">一些文章</h1>
+    </div>
+    <div class="col-lg-6">
+      <a class="new-post btn btn-success btn-lg" href="{{ url_for('new_posts') }}">+ New Posts</a>
+    </div>
+  </div>
+
+  <hr>
+  <br>
+  <div class="container-fluid">
+    {% for post in posts %}
+      <div class="jumbotron posts-content">
+        <h2 class="display-3">{{ post.title }}</h2>
+
+        {% if post.author %}
+          <p class="lead"><em>Written by: {{ post.author }} on {{ post.date_posted }}</em></p>
+        {% else %}
+          <p class="lead"><em>Written by Unknown on {{ post.date_posted }}</em></p>
+        {% endif %}
+        <br>
+        <p style="white-space: pre-wrap">{{ post.content }}</p>
+      </div>
+      <a class="btn btn-danger" href="/posts/delete/{{ post.id }}">删除</a>
+      <a class="btn btn-dark" href="/posts/edit/{{ post.id }}">修改</a>
+      <hr>
+
+    {% endfor %}
+  </div>
+{% endblock %}
+</body>

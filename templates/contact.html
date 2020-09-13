@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block head %}
+  <title>Contact</title>
+{% endblock %}
+
+{% block body %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/contact.css') }}">
+
+  <div class="site-heading">
+    <h1 class="heading">Get in touch</h1><span class="subheading">如果你有什么疑问，请联系我</span>
+  </div>
+    <div class="row">
+      <div class="col-md-10 col-lg-8 mx-auto">
+        <p>请填写以下表格联系我，我将尽快回复你</p>
+        <form id="contactForm" name="sentMessage" novalidate="novalidate">
+          <div class="control-group">
+            <div class="form-group floating-label-form-group controls">
+              <label for="name">名字</label>
+              <input id="name" class="form-control" type="text" required placeholder="请输入名字">
+              <small class="form-text text-danger help-block"></small>
+            </div>
+          </div>
+          <div class="control-group">
+            <div class="form-group floating-label-form-group controls">
+              <label for="email">Email Address</label>
+              <input id="email" class="form-control" type="email" required placeholder="请输入电子邮件">
+              <small class="form-text text-danger help-block"></small>
+            </div>
+          </div>
+        
+          <div class="control-group">
+            <div class="form-group floating-label-form-group controls">
+              <label for="phone">电话号码</label>
+              <input id="phone" class="form-control" type="tel" required placeholder="Phone Number">
+              <small class="form-text text-danger help-block"></small>
+            </div>
+          
+          </div>
+          <div class="control-group">
+            <div class="form-group floating-label-form-group controls">
+              <label for="message">信息</label>
+              <textarea id="message" class="form-control" data-validation-required-message="请输入信息!"
+                        placeholder="Message" rows="5"></textarea>
+              <small class="form-text text-danger help-block"></small>
+            </div>
+          </div>
+          <div id="success"></div>
+          <div class="form-group">
+            <center><button id="sendMessageButton" class="btn btn-primary" type="submit">发送</button></center>
+          </div>
+        </form>
+      </div>
+    </div>
+
+
+  <hr>
+{% endblock %}
+
+{% block footer %}
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-10 col-lg-8 mx-auto">
+          <ul class="list-inline text-center">
+            <a href="https://github.com/Hanshawn11/Kaggle">
+            <li class="list-inline-item">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fab fa-github fa-stack-1x fa-inverse"></i>"
+              </a>
+              </span>
+            </li>
+            <li class="list-inline-item">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fas fa-globe fa-stack-1x fa-inverse"></i>
+              </span>
+            </li>
+          </ul>
+          <!--<p class="text-muted copyright">Copyright © Brand 2020</p>-->
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+          integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+          crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+          integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+          crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+          integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+          crossorigin="anonymous"></script>
+{% endblock %}

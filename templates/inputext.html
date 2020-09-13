@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+
+{% block body %}
+	<div class="container">
+
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/input.css') }}">
+	<h2>
+		<p style="color:white; font-size:65;text-align: center;"><b>Spam Detector For SMS Message</b></p>
+	</h2>
+
+	<form action="{{ url_for('predict')}}" method="POST">
+	<h5><p style="color:white; font-size:45;text-align: center;">请输入你的邮件（英文邮件）</p>
+	</h5>
+		<!-- 让输入文本框居中 -->
+		<div style="text-align:center; vertical-align:middel;">
+		<textarea name="message" rows="4" cols="50"></textarea>
+		<br/>
+		<input type="submit" class="btn-info" value="predict">
+		</div>
+	</form>
+	</div>
+{% endblock %}

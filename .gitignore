@@ -1,0 +1,5 @@
+# Ignore pychache
+__pycache__
+
+# Ignore idea
+.idea

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block head %}
+  <title>发布</title>
+{% endblock %}
+
+{% block body %}
+  <br>
+  <h2>新的博客: </h2>
+  <br>
+  <form action="{{ url_for('posts') }}" method="POST">
+    <label for="title"><strong>标题: </strong></label>
+    <input class="form-control" type="text" name="title" id="title" placeholder="请输入标题" aria-label="Enter Title">
+    <br>
+    <label for="author"><strong>作者: </strong></label>
+    <input class="form-control" type="text" name="author" id="author" placeholder="请输入作者名字"
+           aria-label="Enter Author's name">
+    <br>
+    <label for="content"><strong>发布: </strong></label>
+    <textarea class="form-control" name="content" id="content" placeholder="请输入内容" aria-label="Enter Content"
+              rows="10"></textarea>
+    <br>
+    <input type="submit" value="Post">
+  </form>
+
+{% endblock %}

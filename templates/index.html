@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block head %}
+  <title>Home</title>
+{% endblock %}
+
+<body class="body-home">
+{% block body %}
+  <link class="home-img" rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+  
+  <br>
+  <main role="main">
+    <div class="jumbotron d-flex align-items-center">
+      <div class="col-sm-8 mx-auto">
+        <h1 class="home-heading">A Blog about NLP ようこそ</h1>
+        <p>我对语言学习很感兴趣，以前我学习外语，现在学习机器的语言，学习机器是怎样理解人的语言的。我创作这个博客记录我在学习NLP以及编程的过程中发现的有趣的事情 <br>Click here
+         <a href="inputext">NaiveBayes Spam Detector</a> 了解一个简单的NLP应用</p>
+        <p>
+          <a class="btn btn-primary" href="/posts" role="button">查看博客 &raquo;</a>
+        </p>
+      </div>
+    </div>
+  </main>
+{% endblock %}
+</body>

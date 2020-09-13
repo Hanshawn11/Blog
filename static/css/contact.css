@@ -1,0 +1,76 @@
+body {
+    margin: 0;
+    font-size: 1rem;
+    font-family: Montserrat, sans-serif;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: left;
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("../img/star.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+@media (max-width: 1500px) {
+    body {
+        background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("../img/star.jpg") no-repeat center center fixed;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+    }
+}
+
+p {
+    color: #ffffff;
+    font-size: 1.5rem;
+}
+
+h1{
+    font-size: 5rem;
+    color: #ffffff;
+}
+
+@media (max-width: 1028px) {
+    h1 {
+        font-size: 2.5rem;
+    }
+
+    p {
+        font-size: 1rem;
+    }
+}
+
+label {
+    color: #ffffff;
+}
+
+.subheading {
+    font-size: 1.5rem;
+}
+
+.site-heading {
+    padding: 200px 0 200px;
+    text-align: center;
+    color: #ffffff;
+}
+
+.contact-body {
+    background-color: #f4f6ff;
+}
+
+.container {
+    margin: 0 auto;
+    width: 100%;
+}
+
+#mainNav a {
+    color: #ffffff;
+}
+
+#mainNav {
+    background-color: #000000;
+    opacity: 0.8;
+    filter: alpha(opacity=80);
+}
