@@ -18,7 +18,8 @@ db = SQLAlchemy(app)
 
 
 class BlogPost(db.Model):
-    
+
+    __tablename__ = 'Blog'
     # 创建博客数据库， 指定字段， 主键
 
     id = db.Column(db.Integer, primary_key=True)
@@ -30,6 +31,36 @@ class BlogPost(db.Model):
 
     def __repr__(self):
         return "Blog Post " + str(self.id)
+
+class Customer(db.Model):
+    __tablename__ = 'customer'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(200), nullable=False)
+    phone = db.Column(db.String(200), nullable=False)
+    message = db.Column(db.Text, nullable=True)
+
+
+@app.route("/customerInfo", methods=['GET', 'POST'])
+def getcustm():
+    if request.method == 'POST':
+        cname = request.form['name']
+        cemail = request.form['email']
+        cphone = request.form['phone']
+        cmessage = request.form['message']
+        newcust = Customer(name=cname, email=cemail, phone=cphone, message=cmessage)
+        db.session.add(newcust)
+        db.session.commit()
+        with open('customer.txt', 'a') as f:
+            f.write(cname+',')
+            f.write(cemail+',')
+        return redirect('/')
+    
+    else:
+        allcust = Customer.query.order_by(Customer.name)
+        return render_template('#', cust_db=allcust)
+
 
 
 @app.route("/") 
@@ -141,5 +172,6 @@ def predict():
 
 if __name__ == "__main__":
     # 修改模板后立即生效
+    db.create_all()
     app.jinja_env.auto_reload = True
     app.run(port=2011, debug=True)
