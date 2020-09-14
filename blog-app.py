@@ -54,7 +54,7 @@ def posts():
     else:
         # 如果不是添加新博客的操作， 则在posts页面显示所有博客
         all_posts = BlogPost.query.order_by(BlogPost.date_posted)
-        return render_template('posts.html', posts=all_posts)
+        return render_template('posts.html', post_db=all_posts)
 
 
 @app.route("/home/users/<string:name>/posts/<int:tag>")
@@ -128,12 +128,18 @@ def predict():
     clf = joblib.load(nb)
     if request.method == 'POST':
         message = request.form['message']
+        # 判断中文， 如果包含中文字符报错
         data = [message]
         vect = cv.transform(data).toarray()
         ret = clf.predict(vect)
+        for ch in message:
+            if u'\u4e00' <= ch <= u'\u9fff':
+                ret = 3
+                break
+   
     return render_template('result.html', prediction=ret)
 
 if __name__ == "__main__":
     # 修改模板后立即生效
     app.jinja_env.auto_reload = True
-    app.run(port=6600, debug=True)
+    app.run(port=2011, debug=True)

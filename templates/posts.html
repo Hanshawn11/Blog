@@ -19,9 +19,10 @@
   <hr>
   <br>
   <div class="container-fluid">
-    {% for post in posts %}
+    {% for post in post_db %}
       <div class="jumbotron posts-content">
-        <h2 class="display-3">{{ post.title }}</h2>
+        <!--显示大小-->
+        <h4 class="display-5">{{ post.title }}</h4>
 
         {% if post.author %}
           <p class="lead"><em>Written by: {{ post.author }} on {{ post.date_posted }}</em></p>

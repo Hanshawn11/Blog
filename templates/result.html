@@ -4,19 +4,33 @@
   <title>Spam Detector For SMS Messages</title>
 {% endblock %}
 
-
-{% block body%}
+<body>
+{% block body %}
 	<div class="result">
 	<link rel="stylesheet" href="{{ url_for('static', filename='css/result.css') }}">
+	<br>
+	<br>
+	<br>
+	<br>
 	<h2>
 		<p style="color:white;font-size:65;text-align: center;"><b>检测结果</b></p>
 	</h2>	
-
+	<br>
 	{% if prediction == 1 %}
-	<h2 align="center" style="color:red;">小心！是垃圾邮件</h2>
+	<h2 align="center" style="color:white;">小心！是垃圾邮件</h2>
 	{% elif prediction == 0 %}
 	<h2 align="center" style="color:white;">放心，不是垃圾邮件</h2>
+	{% elif prediction == 3 %}
+	<h2 align="center" style="color:white;">请输入英文邮件</h2>
 	{% endif %}
 
 	</div>
+	<br>
+	<br>
+	<br>
+	<br>
+	<div style="text-align:center">                    
+	<input type="button" name="Submit" value="返回" onclick="javascript:history.back()" />
+	</div>
 {% endblock %}
+</body>
