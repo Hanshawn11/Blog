@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+
+{% block body %}
+<br><br>
+<h3>Login</h3>
+<br><br>
+<form action="{{ url_for('login') }}"method="POST">
+	<label for='username'>Username</label>
+    <input type="text" name="username" required placeholder="input username">
+   
+    <!-- 密码输入框的 type 属性使用 password，会将输入值显示为圆点 -->
+    <label for='password'>Passwd</label>
+    <input type="password" name="password" required placeholder="input password">
+    <input class="btn" type="submit" name="submit" value="Submit">
+</form>
+{% endblock %}

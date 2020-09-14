@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
 import pandas as pd
@@ -9,12 +9,88 @@ from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.metrics import classification_report
 import joblib
+import click
+from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import LoginManager
+from flask_login import login_user
+from flask_login import login_required, logout_user
 
 app = Flask(__name__)
 app.config["CACHE_TYPE"] = "null"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
+app.secret_key = '123'
 db = SQLAlchemy(app)
 
+class User(db.Model, UserMixin):
+    __tablename__ = 'User'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20))
+    username = db.Column(db.String(20))
+    password_hash = db.Column(db.String(128))
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def validate_password(self, password):
+        # 返回布尔值
+        return check_password_hash(self.password_hash, password) 
+
+@app.cli.command()
+@click.option('--username', prompt=True, help='The username used to login.')
+@click.option('--password', prompt=True, hide_input=True, confirmation_prompt=True, help='the password used to login')
+def admin(username, password):
+    user = User.query.first()
+    if user is not None:
+        click.echo('Updating user...')
+        user.username = username
+        user.set_password(password)
+    else:
+        click.echo('Creating user...')
+        user = User(username=username, name='Admin')
+        user.set_password(password)
+        db.session.add(user)
+
+    db.session.commit()
+    click.echo('Done.')
+
+login_manager = LoginManager(app)
+@login_manager.user_loader
+def load_user(user_id):
+    user = User.query.get(int(user_id))
+    return user
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        if not username or not password:
+            flash('Invalid input.')
+            return redirect('/login')
+
+        user = User.query.first()
+        # 验证用户名和密码是否一致
+        if username == user.username and user.validate_password(password):
+            login_user(user)  # 登入用户
+            flash('Login success.')
+            return redirect('#')  # 重定向到主页
+
+        flash('Invalid username or password.')  # 如果验证失败，显示错误消息
+        return redirect('/login') # 重定向回登录页面
+
+    return render_template('login.html')
+
+
+# 退出登录
+@app.route('/logout')
+@login_required 
+def logout():
+    logout_user() 
+    flash('Goodbye.')
+    return redirect('#') 
 
 
 class BlogPost(db.Model):
@@ -99,6 +175,7 @@ def method():
 
 
 @app.route('/posts/delete/<int:idx>')
+@login_required  # 登录保护
 def delete_post(idx):
     # 从数据库中删除博客
     post = BlogPost.query.get_or_404(idx)
@@ -108,6 +185,7 @@ def delete_post(idx):
 
 
 @app.route('/posts/edit/<int:idx>', methods=['GET', 'POST'])
+@login_required  # 登录保护
 def edit_post(idx):
 
     post = BlogPost.query.get_or_404(idx)
@@ -172,6 +250,8 @@ def predict():
 
 if __name__ == "__main__":
     # 修改模板后立即生效
+    #admin()
     db.create_all()
     app.jinja_env.auto_reload = True
-    app.run(port=2011, debug=True)
+    app.run(port=2015, debug=True)
+    
