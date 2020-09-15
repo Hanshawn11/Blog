@@ -22,8 +22,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
 app.secret_key = '123'
 db = SQLAlchemy(app)
 
-<<<<<<< HEAD
-=======
+
 class User(db.Model, UserMixin):
     __tablename__ = 'User'
 
@@ -95,7 +94,6 @@ def logout():
     return redirect('#') 
 
 
->>>>>>> b10fcfc6b57fa570713905321f31f47bafc61a90
 class BlogPost(db.Model):
 
     __tablename__ = 'Blog'
