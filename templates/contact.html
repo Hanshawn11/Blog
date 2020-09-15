@@ -13,18 +13,19 @@
     <div class="row">
       <div class="col-md-10 col-lg-8 mx-auto">
         <p>请填写以下表格联系我，我将尽快回复你</p>
-        <form id="contactForm" name="sentMessage" novalidate="novalidate">
+
+        <form action="{{ url_for('customer')}}" method="POST">
           <div class="control-group">
             <div class="form-group floating-label-form-group controls">
               <label for="name">名字</label>
-              <input id="name" class="form-control" type="text" required placeholder="请输入名字">
+              <input name="name" id="name" class="form-control" type="text" required placeholder="请输入名字">
               <small class="form-text text-danger help-block"></small>
             </div>
           </div>
           <div class="control-group">
             <div class="form-group floating-label-form-group controls">
               <label for="email">Email Address</label>
-              <input id="email" class="form-control" type="email" required placeholder="请输入电子邮件">
+              <input name="email" id="email" class="form-control" type="email" required placeholder="请输入电子邮件">
               <small class="form-text text-danger help-block"></small>
             </div>
           </div>
@@ -32,7 +33,7 @@
           <div class="control-group">
             <div class="form-group floating-label-form-group controls">
               <label for="phone">电话号码</label>
-              <input id="phone" class="form-control" type="tel" required placeholder="Phone Number">
+              <input name="phone" id="phone" class="form-control" type="tel" required placeholder="Phone Number">
               <small class="form-text text-danger help-block"></small>
             </div>
           
@@ -40,7 +41,7 @@
           <div class="control-group">
             <div class="form-group floating-label-form-group controls">
               <label for="message">信息</label>
-              <textarea id="message" class="form-control" data-validation-required-message="请输入信息!"
+              <textarea name="message" id="message" class="form-control" data-validation-required-message="请输入信息!"
                         placeholder="Message" rows="5"></textarea>
               <small class="form-text text-danger help-block"></small>
             </div>

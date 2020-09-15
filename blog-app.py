@@ -15,8 +15,6 @@ app.config["CACHE_TYPE"] = "null"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
 db = SQLAlchemy(app)
 
-
-
 class BlogPost(db.Model):
     
     # 创建博客数据库， 指定字段， 主键
@@ -31,6 +29,17 @@ class BlogPost(db.Model):
     def __repr__(self):
         return "Blog Post " + str(self.id)
 
+
+class Customer(db.Model):    
+
+    id = db.Column(db.Integer, primary_key=True)
+    tel = db.Column(db.Integer)
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(200), nullable=False)
+    message = db.Column(db.Text)
+
+    def __repr__(self):
+        return "Customer " + str(self.id) 
 
 @app.route("/") 
 def index():
@@ -55,6 +64,27 @@ def posts():
         # 如果不是添加新博客的操作， 则在posts页面显示所有博客
         all_posts = BlogPost.query.order_by(BlogPost.date_posted)
         return render_template('posts.html', post_db=all_posts)
+
+
+
+@app.route("/customer", methods=['GET', 'POST'])
+def customer():
+    # 获取contact人的信息
+    if request.method == 'POST':
+        customer_name = request.form['name']
+        customer_tel = request.form['phone']
+        customer_email = request.form['email']
+        customer_message = request.form['message']
+        new_cus = Customer(tel=customer_tel, name=customer_name, email=customer_email, message=customer_message)
+        db.session.add(new_cus)
+        db.session.commit()
+        return redirect('/index')
+    else:
+        all_cus = Customer.query.order_by(Customer.name)
+        return render_template(cust_db=all_cus)
+        #all_cus =  Customer.query.order_by(Customer.name)
+        #return render_template('customer.html', customer_db=all_cus)
+
 
 
 @app.route("/home/users/<string:name>/posts/<int:tag>")
