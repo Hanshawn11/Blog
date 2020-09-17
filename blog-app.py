@@ -12,13 +12,12 @@ import joblib
 import click
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import LoginManager
-from flask_login import login_user
-from flask_login import login_required, logout_user
+from flask_login import login_required, logout_user, login_user, LoginManager, current_user
 
 app = Flask(__name__)
 app.config["CACHE_TYPE"] = "null"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
+# admin passwd
 app.secret_key = '123'
 db = SQLAlchemy(app)
 
@@ -41,6 +40,7 @@ class User(db.Model, UserMixin):
 @click.option('--username', prompt=True, help='The username used to login.')
 @click.option('--password', prompt=True, hide_input=True, confirmation_prompt=True, help='the password used to login')
 def admin(username, password):
+    # 创建管理员，负责修改删除博客
     user = User.query.first()
     if user is not None:
         click.echo('Updating user...')
@@ -90,7 +90,7 @@ def login():
 def logout():
     logout_user() 
     flash('Goodbye.')
-    return redirect('#') 
+    return redirect('/') 
 
 
 class BlogPost(db.Model):

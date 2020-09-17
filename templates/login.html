@@ -1,11 +1,13 @@
 {% extends 'base.html' %}
 
-
 {% block body %}
+
 <br><br>
-<h3>Login</h3>
+<h3>Login Page</h3>
 <br><br>
-<form action="{{ url_for('login') }}"method="POST">
+<!--判断，如果是管理用则可以选择登出操作-->
+{% if current_user.is_anonymous %}
+<form action="{{ url_for('login') }}" method="POST">
 	<label for='username'>Username</label>
     <input type="text" name="username" required placeholder="input username">
    
@@ -13,5 +15,10 @@
     <label for='password'>Passwd</label>
     <input type="password" name="password" required placeholder="input password">
     <input class="btn" type="submit" name="submit" value="Submit">
+ 	
 </form>
+{% else %}
+<h3>You are admin, do you want to logout?</h3> <br>
+<a href="{{ url_for('logout') }}">Logout</a>
+{% endif %}
 {% endblock %}
