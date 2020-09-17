@@ -21,6 +21,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
 app.secret_key = '123'
 db = SQLAlchemy(app)
 
+
 class User(db.Model, UserMixin):
     __tablename__ = 'User'
 
@@ -110,12 +111,12 @@ class BlogPost(db.Model):
 
 class Customer(db.Model):
     __tablename__ = 'customer'
-    
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(200), nullable=False)
     phone = db.Column(db.String(200), nullable=False)
     message = db.Column(db.Text, nullable=True)
+
 
 
 @app.route("/customerInfo", methods=['GET', 'POST'])
@@ -162,6 +163,7 @@ def posts():
         # 如果不是添加新博客的操作， 则在posts页面显示所有博客
         all_posts = BlogPost.query.order_by(BlogPost.date_posted)
         return render_template('posts.html', post_db=all_posts)
+
 
 
 @app.route("/home/users/<string:name>/posts/<int:tag>")
@@ -251,7 +253,7 @@ def predict():
 if __name__ == "__main__":
     # 修改模板后立即生效
     #admin()
-    db.create_all()
+    #db.create_all()
     app.jinja_env.auto_reload = True
     app.run(port=2015, debug=True)
     
