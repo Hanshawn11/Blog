@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block head %}
+  <title>Edit Posts</title>
+{% endblock %}
+
+{% block body %}
+  <h1>Full Context</h1>
+  <hr>
+  <form action="/posts/details/{{ posts.id }}" method="POST">
+    <label for="title"><strong>Title: </strong></label>
+    <p>{{  posts.title }}</p>
+    <br>
+    <label for="author"><strong>author: </strong></label>
+    <p>{{  posts.author }}</p>
+    <br>
+    <label for="content"><strong>Context: </strong></label>
+    <p>{{  posts.content }}</p>
+    <br>
+    <input type="button" name="Submit" value="返回" onclick="javascript:history.back()" />
+  </form>
+  <hr>
+
+{% endblock %}

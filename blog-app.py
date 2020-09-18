@@ -105,7 +105,6 @@ class BlogPost(db.Model):
     content = db.Column(db.Text, nullable=False)
     author = db.Column(db.String(30), nullable=False, default='Not Available')
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-
     def __repr__(self):
         return "Blog Post " + str(self.id)
 
@@ -116,7 +115,6 @@ class Customer(db.Model):
     email = db.Column(db.String(200), nullable=False)
     phone = db.Column(db.String(200), nullable=False)
     message = db.Column(db.Text, nullable=True)
-
 
 
 @app.route("/customerInfo", methods=['GET', 'POST'])
@@ -165,7 +163,6 @@ def posts():
         return render_template('posts.html', post_db=all_posts)
 
 
-
 @app.route("/home/users/<string:name>/posts/<int:tag>")
 def hello(name, tag):
     return "Hello, " + name + " Your ID is: " + str(tag)
@@ -203,6 +200,14 @@ def edit_post(idx):
         return render_template('edit.html', posts=post)
 
 
+# 查看文章详细信息
+@app.route('/posts/details/<int:idx>', methods=['GET', 'POST'])
+def details(idx):
+
+    post = BlogPost.query.get_or_404(idx)
+    return render_template('details.html', posts=post)
+
+
 @app.route('/posts/new', methods=['GET', 'POST'])
 def new_posts():
     # 添加新的博客
@@ -211,12 +216,12 @@ def new_posts():
         post_author = request.form['author']
         post_content = request.form['content']
         new_post = BlogPost(title=post_title, author=post_author, content=post_content)
+        
         db.session.add(new_post)
         db.session.commit()
         return redirect('/posts')
     else:
         return render_template('new_post.html')
-
 
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
@@ -253,7 +258,8 @@ def predict():
 if __name__ == "__main__":
     # 修改模板后立即生效
     #admin()
-    #db.create_all()
+    #db.drop_all()
+    db.create_all()
     app.jinja_env.auto_reload = True
     app.run(port=2015, debug=True)
     

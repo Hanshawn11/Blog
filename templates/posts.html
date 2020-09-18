@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/view-post.css') }}">
   <div class="row header-row">
     <div class="col-lg-6">
-      <h1 class="posts-heading">一些文章</h1>
+      <h3 class="posts-heading">Blogs</h3>
     </div>
     <div class="col-lg-6">
       <a class="new-post btn btn-success btn-lg" href="{{ url_for('new_posts') }}">+ New Posts</a>
@@ -23,7 +23,7 @@
     {% for post in post_db %}
       <div class="jumbotron posts-content">
         <!--显示大小-->
-        <h4 class="display-5">{{ post.title }}</h4>
+        <h6 class="display-7">{{ post.title }}</h6>
 
         {% if post.author %}
           <p class="lead"><em>Written by: {{ post.author }} on {{ post.date_posted }}</em></p>
@@ -31,7 +31,9 @@
           <p class="lead"><em>Written by Unknown on {{ post.date_posted }}</em></p>
         {% endif %}
         <br>
-        <p style="white-space: pre-wrap">{{ post.content }}</p>
+        <p style="white-space: pre-wrap">{{ post.content|striptags|truncate(15) }}
+          <small><a href="/posts/details/{{ post.id }}">Read More</a></small>
+        </p>
       </div>
       <a class="btn btn-danger" href="/posts/delete/{{ post.id }}">删除</a>
       <a class="btn btn-dark" href="/posts/edit/{{ post.id }}">修改</a>
