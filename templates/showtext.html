@@ -1,0 +1,44 @@
+ {% extends 'base.html' %}
+
+
+<body>
+{% block body %}
+<link rel="stylesheet" type= "text/css" href="{{ url_for('static', filename='css/showtext.css') }}">
+<div id="main">
+    <h1>留言板</h1>
+    
+    <br>
+    <br>
+    <div id="form-area">
+        <form action="{{ url_for('textbook') }}" method="POST">
+             <p>请留言:</p>
+             <p>
+             <label for="name"><strong>Name: </strong></label>
+             <input type="text" size="22" name="name">
+             </p>
+             
+             <label for="text"><strong>Content: </strong></label>
+             <textarea rows="4" cols="40" name="text"></textarea>
+             
+             <p>
+             <input type="submit" value="提交">
+             <!--<button type="submit" value="提交"></button>-->
+             </p>
+        </form>
+    </div>
+<div id="entries-area">
+
+<h4>所有留言: </h4>
+
+<div class="entry">
+    {% for greeting in text_db %}
+    <h7>{{ greeting.name }}
+    留言于({{ greeting.timestamp }}:)</h7>
+    <p>{{ greeting.text }}</p>
+    {% endfor %}
+</div>
+</div>
+</div>
+
+{% endblock %}
+</body>

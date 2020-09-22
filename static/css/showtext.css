@@ -1,0 +1,40 @@
+
+body     {
+    background: url("../img/star.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+/* 控制导航栏字体颜色 */
+#mainNav a {
+    color: #ffffff;
+    /*opacity: 1;*/
+    /*text-shadow: #444 0 1px 1px;*/
+}
+
+
+h1 {
+    padding:0 lem;
+    color:#EFEFEF;
+}
+
+#main {
+    padding:0;
+}
+
+#form-area {
+    padding:1.0em 3em;
+    background-color:#EFEFEF;
+}
+
+#entries-area {
+    padding:0.5em 2em;
+    background-color:#BEBFC3;
+}
+
+.entry p {
+    padding:0.5em lem;
+    background-color:#DBDBFF;
+}

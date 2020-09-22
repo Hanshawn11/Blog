@@ -108,6 +108,16 @@ class BlogPost(db.Model):
     def __repr__(self):
         return "Blog Post " + str(self.id)
 
+
+class Textbook(db.Model):
+
+    __tablename__ = 'Textbook'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(30), nullable=False, default='Not Available')
+    text = db.Column(db.Text, nullable=False)
+    timestamp = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+
 class Customer(db.Model):
     __tablename__ = 'customer'
     id = db.Column(db.Integer, primary_key=True)
@@ -116,7 +126,24 @@ class Customer(db.Model):
     phone = db.Column(db.String(200), nullable=False)
     message = db.Column(db.Text, nullable=True)
 
+# 留言板
+@app.route('/textbook', methods=['POST', 'GET'])
+def textbook():
+    
+    if request.method =='POST':
+        name = request.form['name']
+        text = request.form['text']
+        newtext = Textbook(name=name, text=text)
+        db.session.add(newtext)
+        db.session.commit()
+        return redirect('/textbook')
+    else:
+        data = Textbook.query.order_by(Textbook.timestamp.desc()).all()    
+        return render_template('showtext.html', text_db=data)
 
+
+
+# 用户信息
 @app.route("/customerInfo", methods=['GET', 'POST'])
 def getcustm():
     if request.method == 'POST':
@@ -130,11 +157,11 @@ def getcustm():
         with open('customer.txt', 'a') as f:
             f.write(cname+',')
             f.write(cemail+',')
-        return redirect('/')
     
-    else:
-        allcust = Customer.query.order_by(Customer.name)
-        return render_template('#', cust_db=allcust)
+    
+    allcust = Customer.query.order_by(Customer.name)
+    print(allcust)
+    return redirect('/')
 
 
 
