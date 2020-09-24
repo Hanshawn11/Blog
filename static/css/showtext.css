@@ -1,10 +1,23 @@
-
 body     {
-    background: url("../img/blue.jpg") no-repeat center center fixed;
+    margin: 0;
+    font-size: 1rem;
+    font-family: Montserrat, sans-serif;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: left;
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("../img/blue.png") no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
+}
+
+
+/* 导航栏颜色 */
+#mainNav {
+    background-color: black;
+    opacity: 0.8;
+    filter: alpha(opacity=50);
 }
 
 /* 控制导航栏字体颜色 */
