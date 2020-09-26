@@ -13,14 +13,38 @@ import click
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_required, logout_user, login_user, LoginManager, current_user
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField
+from wtforms.validators import DataRequired
+# 富文本
+from flask_ckeditor import CKEditor, CKEditorField
+
 
 app = Flask(__name__)
+
+app.config['CKEDITOR_SERVE_LOCAL'] = True
+app.config['CKEDITOR_HEIGHT'] = 400
+app.secret_key = 'secret string'
 app.config["CACHE_TYPE"] = "null"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
 # admin passwd
 app.secret_key = '123'
+
+ckeditor = CKEditor(app)
 db = SQLAlchemy(app)
 
+
+# 富文本
+class PostForm(FlaskForm):
+    title = StringField('Title')
+    body = CKEditorField('Body', validators=[DataRequired()])
+    submit = SubmitField('Submit')
+
+class ckddata(db.Model):
+    __tablename__ = "ckd"
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.Text, nullable=False)
+    body = db.Column(db.Text, nullable=False)
 
 class User(db.Model, UserMixin):
     __tablename__ = 'User'
@@ -188,6 +212,24 @@ def posts():
         # 如果不是添加新博客的操作， 则在posts页面显示所有博客
         all_posts = BlogPost.query.order_by(BlogPost.date_posted)
         return render_template('posts.html', post_db=all_posts)
+
+
+# 富文本博客
+@app.route('/ckeditor', methods=['GET', 'POST'])
+def cked():
+    form = PostForm()
+    if form.validate_on_submit():
+        title = form.title.data
+        body = form.body.data
+        ckd_data = ckddata(title=title, body=body)
+        db.session.add(ckd_data)
+        db.session.commit()
+        flash("save success")
+        all_ckd = ckddata.query.order_by(ckddata.id.desc())
+
+        return render_template('cked.html', cdk_db = all_ckd)
+
+    return render_template('ckedindex.html', form=form)
 
 
 @app.route("/home/users/<string:name>/posts/<int:tag>")
