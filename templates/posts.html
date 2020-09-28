@@ -48,6 +48,7 @@
  
    {% for data in cdk_db %}
      <div class="jumbotron posts-content">
+        <h7>Markdown style</h7>
         {% if data.author %}
           <p class="lead"><em>Author: {{ data.author }} Written by {{ data.time }}</em></p>
         {% else %}
@@ -59,14 +60,15 @@
           <p class="lead"><em>Written by Unknown on</em></p>
         {% endif %}
         {% if data.body %}
-           <p class="lead"><em>Content: {{ data.body|safe }}</em></p>
+           <p style="white-space: pre-wrap">{{ data.body|striptags|truncate(50) }}
+           <small><a href="/ckeditor/details/{{ data.id }}">Read More</a></small>
+          <!-- <p class="lead"><em>Content: {{ data.body|safe }}</em></p>-->
         {% else %}
            <p class="lead"><em>Written by Unknown on</em></p>
         {% endif %}
         <br>
-        <p style="white-space: pre-wrap">{{ data.content|striptags|truncate(15) }}
-          <small><a href="/ckeditor/details/{{ data.id }}">Read More</a></small>
       <hr>
+      
     <a class="btn btn-danger" href="/ckeditor/delete/{{ data.id }}">删除</a>
     <a class="btn btn-dark" href="/ckeditor/edit/{{ data.id }}">修改</a>
     </div>

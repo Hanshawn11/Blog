@@ -1,0 +1,17 @@
+body {
+    background-color: #cccccc;
+    background-size: cover;
+    font-family: Montserrat, sans-serif;
+}
+
+#mainNav {
+    background-color: black;
+    opacity: 0.8;
+    filter: alpha(opacity=50);
+}
+
+#mainNav a {
+    color: #ffffff;
+    opacity: 1;
+    text-shadow: #444 0 1px 1px;
+}

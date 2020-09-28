@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block body %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/details.css') }}">
   <h1>Full Context</h1>
   <hr>
   <form action="/ckeditor/details/{{ posts.id }}">

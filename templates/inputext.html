@@ -15,14 +15,17 @@
   	<br>
   	<br>
 	<form action="{{ url_for('predict')}}" method="POST">
-	<h5><p style="color:white; font-size:45;text-align: center;">请输入你的邮件（英文邮件）</p>
+	<h5><p style="color:white; font-size:43;text-align: center;">请输入你的邮件（英文邮件）</p>
 	</h5>
 	<br>
 		<!-- 让输入文本框居中 -->
 		<div class="myta" style="text-align:center; vertical-align:middle;">
-		<textarea name="message" rows="4" cols="50"></textarea>
+		<textarea name="message" rows="9" cols="60"></textarea>
 		<br>
-		<input type="submit" class="btn-info" value="predict">
+		<input type="submit" class="btn-info" value="Predict">
+		<br>
+		<br>
+		<p style="color:white; font-size:20;text-align: center;">垃圾邮件检测通常利用一个简单的<a href="https://zhuanlan.zhihu.com/p/26262151">贝叶斯分类器</a>就可以实现比较好的效果</p>
 		</div>
 	</form>
 {% endblock %}

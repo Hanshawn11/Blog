@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
 
 {% block head %}
-  <title>Edit Posts</title>
+  <title>Full Posts</title>
 {% endblock %}
 
 {% block body %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/details.css') }}">
   <h1>Full Context</h1>
   <hr>
   <form action="/posts/details/{{ posts.id }}" method="POST">
