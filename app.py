@@ -38,6 +38,7 @@ db = SQLAlchemy(app)
 class PostForm(FlaskForm):
     title = StringField('Title')
     body = CKEditorField('Body', validators=[DataRequired()])
+    author = StringField('Author')
     submit = SubmitField('Submit')
 
 class ckddata(db.Model):
@@ -45,6 +46,8 @@ class ckddata(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.Text, nullable=False)
     body = db.Column(db.Text, nullable=False)
+    author = db.Column(db.String(50))
+    time = db.Column(db.DateTime, nullable=False, default=datetime.now)
 
 class User(db.Model, UserMixin):
     __tablename__ = 'User'
@@ -195,6 +198,7 @@ def index():
     return render_template('index.html')
 
 
+
 @app.route("/posts", methods=['GET', 'POST'])
 def posts():
     # 接受页面输入数据
@@ -210,28 +214,67 @@ def posts():
         return redirect('/posts') 
     else:
         # 如果不是添加新博客的操作， 则在posts页面显示所有博客
+        all_ckd = ckddata.query.order_by(ckddata.id.desc())
         all_posts = BlogPost.query.order_by(BlogPost.date_posted)
-        return render_template('posts.html', post_db=all_posts)
+        return render_template('posts.html', post_db=all_posts, cdk_db=all_ckd)
 
 
 # 富文本博客
+
 @app.route('/ckeditor', methods=['GET', 'POST'])
 def cked():
     form = PostForm()
     if form.validate_on_submit():
         title = form.title.data
         body = form.body.data
-        ckd_data = ckddata(title=title, body=body)
+        author = form.author.data
+        ckd_data = ckddata(title=title, body=body, author=author)
         db.session.add(ckd_data)
         db.session.commit()
         flash("save success")
         all_ckd = ckddata.query.order_by(ckddata.id.desc())
+        
+        return redirect('/posts')
+        #return render_template('cked.html', cdk_db = all_ckd)
+    return render_template('ckedindex.html', form=form)
+  
 
-        return render_template('cked.html', cdk_db = all_ckd)
+@app.route('/ckeditor/delete/<int:idx>')
+@login_required  # 登录保护
+def delete_ckdpost(idx):
+    # 从数据库中删除博客
+    ckd_post = ckddata.query.get_or_404(idx)
+    db.session.delete(ckd_post)
+    db.session.commit()
+    return redirect('/posts')
 
+
+
+# edit func problem
+@app.route('/ckeditor/edit/<int:idx>', methods=['GET', 'POST'])
+@login_required  # 登录保护
+def edit_ckdpost(idx):
+    form = PostForm()
+    ckd_post = ckddata.query.get_or_404(idx)
+
+    if form.validate_on_submit():
+        # 修改
+        ckd_post.title = form.title.data
+        ckd_post.author = form.author.data
+        ckd_post.body = form.body.data
+        db.session.commit()
+        all_ckd = ckddata.query.order_by(ckddata.id.desc())
+        return redirect('/posts')
     return render_template('ckedindex.html', form=form)
 
+ 
+@app.route('/ckeditor/details/<int:idx>', methods=['GET', 'POST'])
+def ckd_details(idx):
+    ckd_post = ckddata.query.get_or_404(idx)
+    return render_template('ckd_details.html', posts=ckd_post) 
 
+
+'''  
 @app.route("/home/users/<string:name>/posts/<int:tag>")
 def hello(name, tag):
     return "Hello, " + name + " Your ID is: " + str(tag)
@@ -241,7 +284,7 @@ def hello(name, tag):
 def method():
     return "保留一些其他的功能"
 
-
+'''
 @app.route('/posts/delete/<int:idx>')
 @login_required  # 登录保护
 def delete_post(idx):
@@ -270,6 +313,8 @@ def edit_post(idx):
 
 
 # 查看文章详细信息
+
+
 @app.route('/posts/details/<int:idx>', methods=['GET', 'POST'])
 def details(idx):
 
@@ -324,8 +369,11 @@ def predict():
    
     return render_template('result.html', prediction=ret)
 
+
+
+
 if __name__ == "__main__":
-    # 修改模板后立即生效
+    # 创建管理员吧
     #admin()
     #db.drop_all()
     db.create_all()

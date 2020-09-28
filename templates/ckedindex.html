@@ -2,15 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Flask-CKEditor Demo</title>
+    <title>富文本编辑器</title>
 </head>
 <body>
 	<div class="warpper" style="width: 700px; margin: auto">
-		<h1>Flask-CKEditor Demo: Basic</h1>
+		<h1>富文本编辑器</h1>
 		<form method="post">
 			{{ form.csrf_token }}
+			{{ form.author.label }}<br>
+			{{ form.author }}<br><br>
+
 			{{ form.title.label }}<br>
 			{{ form.title }}<br><br>
+			
 			{{ form.body.label }}<br>
 			{{ form.body }}
 			<br>
