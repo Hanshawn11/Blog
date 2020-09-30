@@ -184,7 +184,8 @@ def getcustm():
         with open('customer.txt', 'a') as f:
             f.write(cname+',')
             f.write(cemail+',')
-    
+        flash('Success')
+        return redirect('/') 
     
     allcust = Customer.query.order_by(Customer.name)
     print(allcust)
