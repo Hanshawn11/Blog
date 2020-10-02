@@ -1,0 +1,32 @@
+<title>Abstract</title>
+{% extends 'base.html' %}
+
+{% block head %}
+  <title>文章摘要</title>
+{% endblock %}
+
+<body>
+{% block body %}
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/inputprara.css')}}">
+	<br>
+	<br>
+  	<h2 align="center" style="color:white">文章摘要-基于tf-idf</h2>
+  	<br>
+  	<br>
+	<form action="{{ url_for('paragraph_abs')}}" method="POST">
+	<h5><p style="color:white; font-size:43;text-align: center;">请输入一个短文（中文）</p>
+	</h5>
+	<br>
+		<!-- 让输入文本框居中 -->
+		<div class="myta" style="text-align:center; vertical-align:middle;">
+		<textarea name="paragraph" rows="10" cols="63"></textarea>
+		<br>
+		<br>
+		<input type="submit" class="btn-info" value="摘要">
+		<br>
+		<br>
+		<p style="color:white; font-size:18; text-align: center;">一篇较长的文章中通常有一些句子的信息量很大，有一些句子的信息量很小，文章摘要可以通过计算<a href="http://127.0.0.1:5000/ckeditor/details/7">tf-idf</a>抽取出重要的句子，节省阅读时间</p>
+		</div>
+	</form>
+{% endblock %}
+</body>

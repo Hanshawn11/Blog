@@ -8,6 +8,8 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.metrics import classification_report
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfTransformer
 import joblib
 import click
 from flask_login import UserMixin
@@ -18,6 +20,10 @@ from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 # 富文本
 from flask_ckeditor import CKEditor, CKEditorField
+# 文章摘要 自己写的
+from abstract import core 
+import re
+import jieba
 
 
 app = Flask(__name__)
@@ -34,13 +40,14 @@ ckeditor = CKEditor(app)
 db = SQLAlchemy(app)
 
 
-# 富文本
+# 富文本表单 
 class PostForm(FlaskForm):
     title = StringField('Title')
     body = CKEditorField('Body', validators=[DataRequired()])
     author = StringField('Author')
     submit = SubmitField('Submit')
 
+# 富文本数据库
 class ckddata(db.Model):
     __tablename__ = "ckd"
     id = db.Column(db.Integer, primary_key=True)
@@ -49,6 +56,7 @@ class ckddata(db.Model):
     author = db.Column(db.String(50))
     time = db.Column(db.DateTime, nullable=False, default=datetime.now)
 
+# 用户数据库
 class User(db.Model, UserMixin):
     __tablename__ = 'User'
 
@@ -64,6 +72,45 @@ class User(db.Model, UserMixin):
         # 返回布尔值
         return check_password_hash(self.password_hash, password) 
 
+
+
+# 博客数据库
+class BlogPost(db.Model):
+
+    __tablename__ = 'Blog'
+    # 创建博客数据库， 指定字段， 主键
+
+    id = db.Column(db.Integer, primary_key=True)
+    # 内容，标题等不可为空
+    title = db.Column(db.String(100), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    author = db.Column(db.String(30), nullable=False, default='Not Available')
+    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    def __repr__(self):
+        return "Blog Post " + str(self.id)
+
+
+# 留言板数据库
+class Textbook(db.Model):
+
+    __tablename__ = 'Textbook'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(30), nullable=False, default='Not Available')
+    text = db.Column(db.Text, nullable=False)
+    timestamp = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+
+# Contact访客数据库
+class Customer(db.Model):
+    __tablename__ = 'customer'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(200), nullable=False)
+    phone = db.Column(db.String(200), nullable=False)
+    message = db.Column(db.Text, nullable=True)
+
+
+# 管理员
 @app.cli.command()
 @click.option('--username', prompt=True, help='The username used to login.')
 @click.option('--password', prompt=True, hide_input=True, confirmation_prompt=True, help='the password used to login')
@@ -112,7 +159,7 @@ def login():
     return render_template('login.html')
 
 
-# 退出登录
+# 管理员退出登录
 @app.route('/logout')
 @login_required 
 def logout():
@@ -121,37 +168,7 @@ def logout():
     return redirect('/') 
 
 
-class BlogPost(db.Model):
 
-    __tablename__ = 'Blog'
-    # 创建博客数据库， 指定字段， 主键
-
-    id = db.Column(db.Integer, primary_key=True)
-    # 内容，标题等不可为空
-    title = db.Column(db.String(100), nullable=False)
-    content = db.Column(db.Text, nullable=False)
-    author = db.Column(db.String(30), nullable=False, default='Not Available')
-    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    def __repr__(self):
-        return "Blog Post " + str(self.id)
-
-
-class Textbook(db.Model):
-
-    __tablename__ = 'Textbook'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(30), nullable=False, default='Not Available')
-    text = db.Column(db.Text, nullable=False)
-    timestamp = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-
-
-class Customer(db.Model):
-    __tablename__ = 'customer'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(200), nullable=False)
-    phone = db.Column(db.String(200), nullable=False)
-    message = db.Column(db.Text, nullable=True)
 
 # 留言板
 @app.route('/textbook', methods=['POST', 'GET'])
@@ -170,7 +187,7 @@ def textbook():
 
 
 
-# 用户信息
+# 保存用户信息
 @app.route("/customerInfo", methods=['GET', 'POST'])
 def getcustm():
     if request.method == 'POST':
@@ -193,13 +210,14 @@ def getcustm():
 
 
 
+ # 主页
 @app.route("/") 
 def index():
-    # 主页
     return render_template('index.html')
 
 
 
+# 发博客
 @app.route("/posts", methods=['GET', 'POST'])
 def posts():
     # 接受页面输入数据
@@ -220,8 +238,7 @@ def posts():
         return render_template('posts.html', post_db=all_posts, cdk_db=all_ckd)
 
 
-# 富文本博客
-
+# 发富文本博客
 @app.route('/ckeditor', methods=['GET', 'POST'])
 def cked():
     form = PostForm()
@@ -240,6 +257,7 @@ def cked():
     return render_template('ckedindex.html', form=form)
   
 
+# 删除博客
 @app.route('/ckeditor/delete/<int:idx>')
 @login_required  # 登录保护
 def delete_ckdpost(idx):
@@ -269,23 +287,15 @@ def edit_ckdpost(idx):
     return render_template('ckedindex.html', form=form)
 
  
+# 进入富文本博客详细页面 
 @app.route('/ckeditor/details/<int:idx>', methods=['GET', 'POST'])
 def ckd_details(idx):
     ckd_post = ckddata.query.get_or_404(idx)
     return render_template('ckd_details.html', posts=ckd_post) 
 
 
-'''  
-@app.route("/home/users/<string:name>/posts/<int:tag>")
-def hello(name, tag):
-    return "Hello, " + name + " Your ID is: " + str(tag)
 
-
-@app.route('/methods', methods=['GET', 'POST'])
-def method():
-    return "保留一些其他的功能"
-
-'''
+# 删除博客
 @app.route('/posts/delete/<int:idx>')
 @login_required  # 登录保护
 def delete_post(idx):
@@ -295,7 +305,7 @@ def delete_post(idx):
     db.session.commit()
     return redirect('/posts')
 
-
+# 修改博客
 @app.route('/posts/edit/<int:idx>', methods=['GET', 'POST'])
 @login_required  # 登录保护
 def edit_post(idx):
@@ -314,8 +324,6 @@ def edit_post(idx):
 
 
 # 查看文章详细信息
-
-
 @app.route('/posts/details/<int:idx>', methods=['GET', 'POST'])
 def details(idx):
 
@@ -338,6 +346,7 @@ def new_posts():
     else:
         return render_template('new_post.html')
 
+# 联系人界面
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
     return render_template('contact.html')
@@ -345,7 +354,8 @@ def contact():
 @app.route('/inputext')
 def inputmail():
     return render_template('inputext.html')
-    
+
+# 垃圾邮件预测功能    
 @app.route('/spamdetect', methods=['GET', 'POST'])
 def predict():
     # 垃圾邮件检测功能
@@ -371,12 +381,30 @@ def predict():
     return render_template('result.html', prediction=ret)
 
 
+@app.route('/inputpara')
+def inputpara():
+    return render_template('inputpara.html')
 
+@app.route('/paragraph_abstract', methods=['GET', 'POST'])
+def paragraph_abs():
+    if request.method == 'POST':
+        para = request.form['paragraph']
+        para = re.sub(r'[a-zA-Z]', '', para) 
+    key = core.main(para)
+    key = key[0] + key[1]
+    #print(key[0]+' '+key[1])
+    #print(key[1])
+    return render_template('/abstract_page.html', key_sent=key)
+
+
+@app.route('/chatbot')
+def chatbot():
+    return redirect('/')
 
 if __name__ == "__main__":
-    # 创建管理员吧
+    # 创建管理员
     #admin()
-    #db.drop_all()
+    #db.drop_all()  ！ 删库
     db.create_all()
     app.jinja_env.auto_reload = True
     app.run(port=5000, debug=True)
