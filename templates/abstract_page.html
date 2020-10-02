@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block head %}
+  <title>文章摘要</title>
+{% endblock %}
+
+<body>
+{% block body %}
+	<div class="result">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/result.css') }}">
+	<br>
+	<br>
+	<br>
+	<br>
+	<h2>
+		<p style="color:white;font-size:70;text-align: center;"><b>Abstract</b></p>
+	</h2>	
+	<br>
+	<br>
+	<br>
+	<p style="color:white; font-size:24px; text-align: center;">
+	   {{ key_sent }}
+	</p>
+	</div>
+	<br>
+	<br>
+	<div style="text-align:center">                    
+	<input type="button" name="Submit" value="返回" onclick="javascript:history.back()" />
+	</div>
+{% endblock %}
+</body>

@@ -10,13 +10,13 @@
   <hr>
   <form action="/ckeditor/details/{{ posts.id }}">
     <label for="title"><strong>Title: </strong></label>
-    <p class="lead"><em>{{ posts.title }}</em></p>
+    <p class="lead">{{ posts.title }}</p>
     <br>
-    <label for="author"><strong>author: </strong></label>
-    <p class="lead"><em>{{ posts.author }} Written by {{ posts.time }}</em></p>
+    <label for="author"><strong>Author: </strong></label>
+    <p class="lead">{{ posts.time }} <strong>Written by</strong> {{ posts.author }}</p>
     <br>
     <label for="content"><strong>Context: </strong></label>
-    <p class="lead"><em>{{ posts.body|safe }}</em></p>
+    <p class="lead">{{ posts.body|safe }}</p>
     <br>
     <input type="button" name="Submit" value="返回" onclick="javascript:history.back()" />
   </form>
