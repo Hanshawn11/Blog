@@ -391,7 +391,7 @@ def paragraph_abs():
         para = request.form['paragraph']
         para = re.sub(r'[a-zA-Z]', '', para) 
     key = core.main(para)
-    key = key[0] + key[1]
+    key = key[0] #+ key[1]
     #print(key[0]+' '+key[1])
     #print(key[1])
     return render_template('/abstract_page.html', key_sent=key)
