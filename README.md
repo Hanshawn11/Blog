@@ -4,4 +4,5 @@
 4. 实现留言板功能
 5. 在博客内部署了一个机器学习模型（贝叶斯），实现垃圾邮件检测功能。 实现文章摘要功能
 6. 运行方式:  添加必要依赖requirements.txt, 在Blog 文件路径下运行python app.py
-7. 主页示例 ![image](https://github.com/Hanshawn11/Blog/blob/master/homeexample.png)
+7. abstract 文件夹存放的是实现文本摘要的相关代码
+8. 主页示例 ![image](https://github.com/Hanshawn11/Blog/blob/master/homeexample.png)
